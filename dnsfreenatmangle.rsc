@@ -5,7 +5,7 @@ set allow-remote-requests=yes cache-size=12048KiB max-udp-packet-size=768 server
 /ip firewall nat
 add chain=srcnat out-interface="VPN DNS Natmangle ID" action=masquerade comment="NAT | VPN DNS Natmangle"
 add action=redirect chain=dstnat port=53 protocol=udp to-ports=53 comment="DMZ | UDP VPN DNS Natmangle"
-add action=redirect chain=dstnat port=53 protocol=tcp to-ports=53 comment="DMZ | TCPP VPN DNS Natmangle"
+add action=redirect chain=dstnat port=53 protocol=tcp to-ports=53 comment="DMZ | TCP VPN DNS Natmangle"
 /ip route
 add distance=1 dst-address=1.1.1.1/32 gateway=192.168.255.255 comment="ROUTING TO VPN DNS Natmangle"
 add distance=1 dst-address=1.0.0.1/32 gateway=192.168.255.255 comment="ROUTING TO VPN DNS Natmangle"

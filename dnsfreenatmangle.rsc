@@ -1,5 +1,5 @@
 /interface sstp-client
-add comment="Server VPN Natmangle" connect-to=vpn1.natmangle.id:1027 disabled=no http-proxy=0.0.0.0:1027 name="VPN DNS Natmangle ID" password=dnspassnatmangle profile=default-encryption user=dns verify-server-address-from-certificate=no
+add comment="Server VPN Natmangle" connect-to=vpndns.natmangle.id:1027 disabled=no http-proxy=0.0.0.0:1027 name="VPN DNS Natmangle ID" password=dnspassnatmangle profile=default-encryption user=dns verify-server-address-from-certificate=no
 /ip dns
 set allow-remote-requests=yes cache-size=12048KiB max-udp-packet-size=768 servers=1.1.1.1,1.0.0.1
 /ip firewall nat

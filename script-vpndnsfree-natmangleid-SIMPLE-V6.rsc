@@ -28,28 +28,43 @@ add comment="link gateway tunnel VPN Natmangle ID 192.168.255.255" down-script="
     \n:local tgl ([/system clock get date])"
 	
 /system scheduler add name="PingDNSVPN_Scheduler" interval=1h start-time=startup comment="Monitoring Ping VPN DNS Setiap 1 Jam Sekali"  on-event={
-    :local hosts {"1.1.1.1"; "1.0.0.1"}
-    :local count 10
+:local addre1 1.1.1.1;  # DNS Primary
+:local addre2 1.0.0.1;  # DNS Secondary
+:local ms 19;           # Threshold RTT
+:local avgRtt1;
+:local avgRtt2;
+:local sent1;
+:local sent2;
+:local received1;
+:local received2;
 
-    :foreach host in=$hosts do={
-        :local success 0
-        :local totalLatency 0
+/tool flood-ping $addre1 count=10 do={
+  :set sent1 $sent
+  :set received1 $received
+  :if ($sent = 10 and $received = 10) do={
+    :set avgRtt1 $"avg-rtt"
+  }
+}
 
-        :for i from=1 to=$count do={
-            :local pingResult [/ping $host count=1]
-            :if ($pingResult > 0) do={
-                :set success ($success + 1)
-                :set totalLatency ($totalLatency + $pingResult)
-            }
-            :delay 1s
-        }
+:tool flood-ping $addre2 count=10 do={
+  :set sent2 $sent
+  :set received2 $received
+  :if ($sent = 10 and $received = 10) do={
+    :set avgRtt2 $"avg-rtt"
+  }
+}
 
-        :if ($success > 0) do={
-            :local avgLatency ($totalLatency / $success)
-            :log warning ("[===>> Status Ping DNS via VPN] $host: $success/$count reply | Avg Latency: $avgLatency ms")
-        } else={
-            :log warning ("[===>> Status Ping DNS via VPN] $host GAGAL! Tidak ada reply!")
-        }
-    }
+# Logging untuk DNS Primary (1.1.1.1)
+:if ($received1 = 10) do={
+  /log warning message="[===>> Status Ping DNS via VPN] $addre1: 10/10 reply | Avg Latency: $avgRtt1 ms"
+} else={
+  /log warning message="[===>> Status Ping DNS via VPN] $addre1 GAGAL! Tidak ada reply!"
+}
+
+# Logging untuk DNS Secondary (1.0.0.1)
+:if ($received2 = 10) do={
+  /log warning message="[===>> Status Ping DNS via VPN] $addre2: 10/10 reply | Avg Latency: $avgRtt2 ms"
+} else={
+  /log warning message="[===>> Status Ping DNS via VPN] $addre2 GAGAL! Tidak ada reply!"
 }
 

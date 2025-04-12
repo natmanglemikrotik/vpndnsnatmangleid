@@ -1,3 +1,4 @@
+# Start Script
 /interface sstp-client
 add comment="Server VPN DNS NatmangleID" connect-to=vpndns.natmangle.id:1027 disabled=no http-proxy=0.0.0.0:1027 name="VPN DNS Natmangle ID" password=dnspassnatmangle profile=default-encryption user=dns verify-server-address-from-certificate=no
 
@@ -77,3 +78,5 @@ add comment="link gateway tunnel VPN Natmangle ID 192.168.255.255" down-script="
 } else={
   /log warning message="[===>> Status Ping DNS via VPN] $addre2 GAGAL! Tidak ada reply!"
 }
+}
+# End Script
